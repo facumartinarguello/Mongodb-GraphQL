@@ -1,0 +1,18 @@
+exports = async function (payload) {
+  
+  var body = {};
+  var result = {};
+  if (payload.body) {
+    console.log (JSON.stringify(payload.body));
+    body = EJSON.parse (payload.body.text());
+    console.log(JSON.stringify("body.input"));
+    console.log(JSON.stringify(body));
+    
+    var proyects = await context.services.get("mongodb-atlas").db ("HauseyTaruma").collection("Protocol_Hamilton");
+    var doc = await proyects.insertOne(body);
+    console.log (JSON.stringify("return document"));
+    console.log(JSON.stringify(doc));
+  }
+  return doc;
+  }
+;
