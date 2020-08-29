@@ -38,3 +38,66 @@
 +  const mycollection = mongodb.db("HauseyTaruma").collection("Protocol_Hamilton");
 +  return mycollection.find({}).toArray();
  };
+_________________________
+
+
+--- secrets.json
++++ secrets.json
+@@ -4,6 +4,7 @@
+     },
+     "services": {
+         "APIHausey": {},
++        "APIHausey_Post": {},
+         "mongodb-atlas": {}
+     }
+ }
+--- services/APIHausey_Post/config.json
++++ services/APIHausey_Post/config.json
+@@ -1 +1,8 @@
++{
++    "id": "5f4a01d1bfb90ac620863b6b",
++    "name": "APIHausey_Post",
++    "type": "http",
++    "config": {},
++    "version": 1
++}
+ 
+--- services/APIHausey_Post/incoming_webhooks/webhook1/config.json
++++ services/APIHausey_Post/incoming_webhooks/webhook1/config.json
+@@ -1 +1,15 @@
++{
++    "id": "5f4a01efe869aaa9be5614e6",
++    "name": "webhook1",
++    "run_as_authed_user": false,
++    "run_as_user_id": "",
++    "run_as_user_id_script_source": "",
++    "options": {
++        "httpMethod": "POST",
++        "validationMethod": "NO_VALIDATION"
++    },
++    "respond_result": true,
++    "fetch_custom_user_data": false,
++    "create_user_on_auth": false
++}
+ 
+--- services/APIHausey_Post/incoming_webhooks/webhook1/source.js
++++ services/APIHausey_Post/incoming_webhooks/webhook1/source.js
+@@ -1 +1,19 @@
++exports = async function (payload) {
++  
++  var body = {};
++  var result = {};
++  if (payload.body) {
++    console.log (JSON.stringify(payload.body));
++    body = EJSON.parse (payload.body.text());
++    console.log(JSON.stringify("body.input"));
++    console.log(JSON.stringify(body));
++    
++    var proyects = await context.services.get("mongodb-atlas").db ("HauseyTaruma").collection("Protocol_Hamilton");
++    var doc = await proyects.insertOne(body);
++    console.log (JSON.stringify("return document"));
++    console.log(JSON.stringify(doc));
++  }
++  return doc;
++  }
++;
